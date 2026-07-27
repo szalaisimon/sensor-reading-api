@@ -25,25 +25,14 @@ public class MeasurementQueryRepository {
 
         try (final @NonNull Stream<Measurement> measurementStream = measurementSource.getMeasurements()) {
             measurementStream.forEach(measurement -> {
-                final @Nullable NavigableMap<LocalDate, DailyStatistics> dailyStatisticsMap = result.get(measurement.deviceId());
-                final @NonNull LocalDate currentLocalDate = LocalDate.ofInstant(measurement.measureTime(), ZoneOffset.UTC);
+                final @NonNull NavigableMap<LocalDate, DailyStatistics> deviceDays
+                        = result.computeIfAbsent(measurement.deviceId(), deviceId -> new TreeMap<>());
 
-                if (dailyStatisticsMap == null) {
-                    // new device
-                    final @NonNull NavigableMap<LocalDate, DailyStatistics> newDailyStatistics = new TreeMap<>();
-                    newDailyStatistics.put(currentLocalDate, DailyStatistics.from(measurement));
-                    result.put(measurement.deviceId(), newDailyStatistics);
-                } else {
-                    // device already set
-                    final @Nullable DailyStatistics dailyStatistics = dailyStatisticsMap.get(currentLocalDate);
+                final @NonNull LocalDate date = LocalDate.ofInstant(measurement.measureTime(), ZoneOffset.UTC);
+                final @Nullable DailyStatistics existing = deviceDays.get(date);
+                final @NonNull DailyStatistics fromMeasurement = DailyStatistics.from(measurement);
 
-                    if (dailyStatistics == null) {
-                        // new LocalDate
-                        dailyStatisticsMap.put(currentLocalDate, DailyStatistics.from(measurement));
-                    } else {
-                        dailyStatistics.update(measurement);
-                    }
-                }
+                deviceDays.put(date, existing == null ? fromMeasurement : existing.merge(fromMeasurement));
             });
         }
 
@@ -66,12 +55,12 @@ public class MeasurementQueryRepository {
         }
 
         if (from == null && to == null) {
-            return dailyStatisticsMap.tailMap(dailyStatisticsMap.lastKey(), true);
+            return Collections.unmodifiableNavigableMap(dailyStatisticsMap.tailMap(dailyStatisticsMap.lastKey(), true));
         }
 
-        return dailyStatisticsMap.subMap(
+        return Collections.unmodifiableNavigableMap(dailyStatisticsMap.subMap(
                 from != null ? from : LocalDate.MIN, true,
                 to != null ? to : LocalDate.MAX, true
-        );
+        ));
     }
 }

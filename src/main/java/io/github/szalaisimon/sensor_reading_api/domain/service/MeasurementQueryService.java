@@ -27,13 +27,13 @@ public class MeasurementQueryService {
             final @NonNull Map<LocalDate, DailyStatistics> dailyStatistics = measurementQueryRepository.getDailyStatistics(deviceId, query.from(), query.to());
 
             //aggregate
-            final @NonNull MetricStatistics aggregatedTemperature = MetricStatistics.empty();
-            final @NonNull MetricStatistics aggregatedHumidity = MetricStatistics.empty();
+            final @NonNull MetricStatistics aggregatedTemperature = dailyStatistics.values().stream()
+                    .map(DailyStatistics::temperature)
+                    .reduce(MetricStatistics.EMPTY, MetricStatistics::merge);
 
-            dailyStatistics.forEach((key, value) -> {
-                aggregatedTemperature.update(value.temperature());
-                aggregatedHumidity.update(value.humidity());
-            });
+            final @NonNull MetricStatistics aggregatedHumidity = dailyStatistics.values().stream()
+                    .map(DailyStatistics::humidity)
+                    .reduce(MetricStatistics.EMPTY, MetricStatistics::merge);
 
             deviceStatistics.add(new MeasurementQueryResult.DeviceStatistics(
                     deviceId,

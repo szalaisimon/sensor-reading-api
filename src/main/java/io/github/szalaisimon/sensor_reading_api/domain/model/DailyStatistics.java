@@ -10,15 +10,14 @@ public record DailyStatistics(
     public static DailyStatistics from(final @NonNull Measurement measurement) {
         return new DailyStatistics(
                 MetricStatistics.from(measurement.temperature().celsius()),
-                measurement.humidity() != null ? MetricStatistics.from(measurement.humidity()) : MetricStatistics.empty()
+                measurement.humidity() != null ? MetricStatistics.from(measurement.humidity()) : MetricStatistics.EMPTY
         );
     }
 
-    public void update(final @NonNull Measurement measurement) {
-        temperature.update(measurement.temperature().celsius());
-
-        if (measurement.humidity() != null) {
-            humidity.update(measurement.humidity());
-        }
+    public @NonNull DailyStatistics merge(final @NonNull DailyStatistics other) {
+        return new DailyStatistics(
+                temperature.merge(other.temperature()),
+                humidity.merge(other.humidity())
+        );
     }
 }

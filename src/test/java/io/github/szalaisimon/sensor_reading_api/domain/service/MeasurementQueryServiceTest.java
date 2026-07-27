@@ -78,8 +78,8 @@ class MeasurementQueryServiceTest {
     @Test
     void averageIsWeightedByMeasurementCountTest() {
         when(measurementQueryRepository.getDailyStatistics(1L, D_07_01, D_07_02)).thenReturn(dailyStatisticsOf(
-                D_07_01, new DailyStatistics(new MetricStatistics(3L, 60, 10, 30), MetricStatistics.empty()),
-                D_07_02, new DailyStatistics(new MetricStatistics(1L, 40, 40, 40), MetricStatistics.empty())
+                D_07_01, new DailyStatistics(new MetricStatistics(3L, 60, 10, 30), MetricStatistics.EMPTY),
+                D_07_02, new DailyStatistics(new MetricStatistics(1L, 40, 40, 40), MetricStatistics.EMPTY)
         ));
 
         final @NonNull MeasurementQuery query = new MeasurementQuery(Set.of(1L), D_07_01, D_07_02, Set.of(Metric.TEMPERATURE), Statistic.AVERAGE);
@@ -162,7 +162,7 @@ class MeasurementQueryServiceTest {
     // =============== PRIVATE METHODS ===============
 
     private static @NonNull DailyStatistics day(final double temperature) {
-        return new DailyStatistics(MetricStatistics.from(temperature), MetricStatistics.empty());
+        return new DailyStatistics(MetricStatistics.from(temperature), MetricStatistics.EMPTY);
     }
 
     private static @NonNull DailyStatistics day(final double temperature, final int humidity) {

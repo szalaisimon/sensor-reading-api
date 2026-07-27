@@ -47,7 +47,7 @@ class MeasurementQueryRepositoryTest {
                 = measurementQueryRepository.getDailyStatistics(1L, null, null);
 
         assertEquals(
-                Map.of(D_07_01, new DailyStatistics(new MetricStatistics(2L, 50, 20, 30), MetricStatistics.empty())),
+                Map.of(D_07_01, new DailyStatistics(new MetricStatistics(2L, 50, 20, 30), MetricStatistics.EMPTY)),
                 actualDailyStatistics
         );
     }
@@ -85,7 +85,7 @@ class MeasurementQueryRepositoryTest {
                 = measurementQueryRepository.getDailyStatistics(1L, null, null);
 
         assertEquals(
-                Map.of(D_07_03, new DailyStatistics(MetricStatistics.from(30), MetricStatistics.empty())),
+                Map.of(D_07_03, new DailyStatistics(MetricStatistics.from(30), MetricStatistics.EMPTY)),
                 actualDailyStatistics
         );
     }
@@ -103,8 +103,8 @@ class MeasurementQueryRepositoryTest {
 
         assertEquals(2, actualDailyStatistics.size());
         assertEquals(Map.of(
-                D_07_02, new DailyStatistics(MetricStatistics.from(20), MetricStatistics.empty()),
-                D_07_03, new DailyStatistics(MetricStatistics.from(30), MetricStatistics.empty())
+                D_07_02, new DailyStatistics(MetricStatistics.from(20), MetricStatistics.EMPTY),
+                D_07_03, new DailyStatistics(MetricStatistics.from(30), MetricStatistics.EMPTY)
         ), actualDailyStatistics);
     }
 
@@ -121,8 +121,8 @@ class MeasurementQueryRepositoryTest {
 
         assertEquals(2, actualDailyStatistics.size());
         assertEquals(Map.of(
-                D_07_01, new DailyStatistics(MetricStatistics.from(10), MetricStatistics.empty()),
-                D_07_02, new DailyStatistics(MetricStatistics.from(20), MetricStatistics.empty())
+                D_07_01, new DailyStatistics(MetricStatistics.from(10), MetricStatistics.EMPTY),
+                D_07_02, new DailyStatistics(MetricStatistics.from(20), MetricStatistics.EMPTY)
         ), actualDailyStatistics);
     }
 
@@ -138,7 +138,7 @@ class MeasurementQueryRepositoryTest {
                 = measurementQueryRepository.getDailyStatistics(1L, D_07_02, D_07_02);
 
         assertEquals(
-                Map.of(D_07_02, new DailyStatistics(MetricStatistics.from(20), MetricStatistics.empty())),
+                Map.of(D_07_02, new DailyStatistics(MetricStatistics.from(20), MetricStatistics.EMPTY)),
                 actualDailyStatistics
         );
     }

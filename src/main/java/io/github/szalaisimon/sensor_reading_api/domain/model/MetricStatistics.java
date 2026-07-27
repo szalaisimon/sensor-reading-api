@@ -1,57 +1,35 @@
 package io.github.szalaisimon.sensor_reading_api.domain.model;
 
-import lombok.*;
+import lombok.NonNull;
 
-@Getter
-@AllArgsConstructor
-@EqualsAndHashCode
-@ToString
-public class MetricStatistics {
+public record MetricStatistics(
+        long count,
+        double sum,
+        double min,
+        double max
+) {
 
-    private long count;
-    private double sum;
-    private double min;
-    private double max;
+    public static final MetricStatistics EMPTY = new MetricStatistics(0L, 0D, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY);
 
-    public static MetricStatistics from(double value) {
+    public static MetricStatistics from(final double value) {
         return new MetricStatistics(1L, value, value, value);
     }
 
-    public static MetricStatistics empty() {
-        return new MetricStatistics(0L, 0D, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY);
-    }
-
-    public void update(double value) {
-        this.sum += value;
-        this.count += 1L;
-
-        if (value > max) {
-            this.max = value;
-        }
-
-        if (value < min) {
-            this.min = value;
-        }
-    }
-
-    /**
-     * Két részaggregátum összefésülése (pl. napi statisztikákból időszakos statisztika).
-     */
-    public void update(final @NonNull MetricStatistics other) {
+    public @NonNull MetricStatistics merge(final @NonNull MetricStatistics other) {
         if (other.isEmpty()) {
-            return;
+            return this;
         }
 
-        this.sum += other.sum;
-        this.count += other.count;
-
-        if (other.max > max) {
-            this.max = other.max;
+        if (isEmpty()) {
+            return other;
         }
 
-        if (other.min < min) {
-            this.min = other.min;
-        }
+        return new MetricStatistics(
+                count + other.count,
+                sum + other.sum,
+                Math.min(min, other.min),
+                Math.max(max, other.max)
+        );
     }
 
     public boolean isEmpty() {
