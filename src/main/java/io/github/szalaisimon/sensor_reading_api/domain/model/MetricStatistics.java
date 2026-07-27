@@ -1,11 +1,11 @@
 package io.github.szalaisimon.sensor_reading_api.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 
 @Getter
 @AllArgsConstructor
+@EqualsAndHashCode
+@ToString
 public class MetricStatistics {
 
     private long count;
