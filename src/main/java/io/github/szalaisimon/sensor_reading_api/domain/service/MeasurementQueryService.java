@@ -8,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Answers statistics queries: fills in the documented defaults, aggregates each device's
@@ -25,9 +22,12 @@ public class MeasurementQueryService {
 
     public @NonNull MeasurementQueryResult query(final @NonNull MeasurementQuery request) {
         final @NonNull MeasurementQuery query = normalize(request);
+        //normalize() resolved the defaults, so these are never null
+        final @NonNull Set<Long> deviceIds = Objects.requireNonNull(query.deviceIds());
+        final @NonNull Statistic statistic = Objects.requireNonNull(query.statistic());
         final @NonNull List<MeasurementQueryResult.DeviceStatistics> deviceStatistics = new ArrayList<>();
 
-        query.deviceIds().forEach(deviceId -> {
+        deviceIds.forEach(deviceId -> {
             final @NonNull Map<LocalDate, DailyStatistics> dailyStatistics = measurementQueryRepository.getDailyStatistics(deviceId, query.from(), query.to());
 
             //aggregate
@@ -41,8 +41,8 @@ public class MeasurementQueryService {
 
             deviceStatistics.add(new MeasurementQueryResult.DeviceStatistics(
                     deviceId,
-                    toStatisticMap(query.metrics(), query.statistic(), Metric.TEMPERATURE, aggregatedTemperature),
-                    toStatisticMap(query.metrics(), query.statistic(), Metric.HUMIDITY, aggregatedHumidity)
+                    toStatisticMap(query.metrics(), statistic, Metric.TEMPERATURE, aggregatedTemperature),
+                    toStatisticMap(query.metrics(), statistic, Metric.HUMIDITY, aggregatedHumidity)
             ));
         });
         return new MeasurementQueryResult(query, deviceStatistics);
