@@ -59,7 +59,7 @@ class CsvMeasurementSourceTest {
     }
 
     @Test
-    void skipsMalformedLinesButKeepsValidOnes() {
+    void skipsMalformedLinesButKeepsValidOnesTest() {
         final @NonNull List<Measurement> result = readAll(sourceOf("""
                 %s
                 1,2024-05-01T10:15:30Z,21.5,C

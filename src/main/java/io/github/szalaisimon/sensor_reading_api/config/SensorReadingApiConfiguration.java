@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 
 /**
- * Wires the data and domain layers together, so those classes can stay free of Spring annotations.
+ * Wires the data and domain layers together
  */
 @Configuration
 public class SensorReadingApiConfiguration {
