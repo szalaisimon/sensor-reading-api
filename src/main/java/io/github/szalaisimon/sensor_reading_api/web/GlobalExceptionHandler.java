@@ -10,6 +10,10 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * Turns exceptions into the uniform {@link ApiError} body: client mistakes become 400 with a helpful
+ * message, everything else becomes 500 without leaking internals.
+ */
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {

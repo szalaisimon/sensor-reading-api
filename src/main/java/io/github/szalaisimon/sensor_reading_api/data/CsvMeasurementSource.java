@@ -17,6 +17,10 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+/**
+ * Reads measurements from a CSV resource. A single bad line should not lose a whole file of data,
+ * so malformed lines are logged and skipped instead of failing the load.
+ */
 @Slf4j
 @RequiredArgsConstructor
 public class CsvMeasurementSource implements MeasurementSource {

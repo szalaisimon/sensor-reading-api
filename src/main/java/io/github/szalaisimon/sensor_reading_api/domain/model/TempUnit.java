@@ -3,6 +3,9 @@ package io.github.szalaisimon.sensor_reading_api.domain.model;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Temperature scales accepted from the source data. The API itself only ever exposes Celsius.
+ */
 @RequiredArgsConstructor
 public enum TempUnit {
     FAHRENHEIT("F") {

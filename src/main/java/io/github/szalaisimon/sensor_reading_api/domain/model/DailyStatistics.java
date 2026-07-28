@@ -2,6 +2,10 @@ package io.github.szalaisimon.sensor_reading_api.domain.model;
 
 import lombok.NonNull;
 
+/**
+ * One device-day's aggregated temperature and humidity — the unit the repository stores
+ * and the service builds multi-day statistics from.
+ */
 public record DailyStatistics(
         @NonNull MetricStatistics temperature,
         @NonNull MetricStatistics humidity

@@ -11,6 +11,10 @@ import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.Stream;
 
+/**
+ * In-memory store of per-device, per-day statistics. All readings are folded into daily summaries
+ * once at startup, so queries never have to touch the raw measurements again.
+ */
 @Slf4j
 public class MeasurementQueryRepository {
 
@@ -43,6 +47,10 @@ public class MeasurementQueryRepository {
         return Collections.unmodifiableSet(measurements.keySet());
     }
 
+    /**
+     * Returns the device's daily statistics within the given closed date range.
+     * An open end means unbounded; when no range is given at all, only the device's latest day is returned.
+     */
     public @NonNull NavigableMap<LocalDate, DailyStatistics> getDailyStatistics(
             final @NonNull Long deviceId,
             final @Nullable LocalDate from,

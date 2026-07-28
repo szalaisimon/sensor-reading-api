@@ -2,6 +2,10 @@ package io.github.szalaisimon.sensor_reading_api.domain.model;
 
 import lombok.NonNull;
 
+/**
+ * Aggregate of one metric's values, kept as count/sum/min/max so partial results
+ * can be merged without keeping the individual readings around.
+ */
 public record MetricStatistics(
         long count,
         double sum,

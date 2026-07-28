@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Answers statistics queries: fills in the documented defaults, aggregates each device's
+ * daily statistics over the requested days and keeps only the asked metrics.
+ */
 @RequiredArgsConstructor
 @Slf4j
 public class MeasurementQueryService {
@@ -44,6 +48,10 @@ public class MeasurementQueryService {
         return new MeasurementQueryResult(query, deviceStatistics);
     }
 
+    /**
+     * Rejects an inverted date range and resolves the defaults (all devices, AVERAGE), so the rest
+     * of the query logic — and the {@code query} echoed in the response — works with explicit values.
+     */
     private @NonNull MeasurementQuery normalize(final @NonNull MeasurementQuery request) {
         if (request.from() != null && request.to() != null && request.from().isAfter(request.to())) {
             throw new IllegalArgumentException("'from' (" + request.from() + ") must not be after 'to' (" + request.to() + ")");
@@ -60,6 +68,10 @@ public class MeasurementQueryService {
         );
     }
 
+    /**
+     * Null when the metric was not asked for or the device has no such data,
+     * which leaves the metric out of the JSON response entirely.
+     */
     private @Nullable Map<Statistic, Double> toStatisticMap(
             final @NonNull Set<Metric> metrics,
             final @NonNull Statistic statistic,

@@ -5,6 +5,9 @@ import org.springframework.http.HttpStatus;
 
 import java.time.Instant;
 
+/**
+ * Uniform error body returned by every endpoint, so clients can parse failures the same way.
+ */
 public record ApiError(
         @NonNull Instant timestamp,
         int status,

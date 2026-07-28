@@ -5,6 +5,10 @@ import lombok.NonNull;
 
 import java.time.Instant;
 
+/**
+ * A single sensor reading as received from the source. Physically impossible values
+ * are rejected at construction, so a measurement that exists is always valid.
+ */
 public record Measurement(
         long deviceId,
         @NonNull Instant measureTime,
